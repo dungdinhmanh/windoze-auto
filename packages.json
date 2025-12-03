@@ -79,6 +79,9 @@
 					"PackageIdentifier" : "Git.Git"
 				},
 				{
+					"PackageIdentifier" : "OpenJS.NodeJS.LTS"
+				},
+				{
 					"PackageIdentifier" : "Microsoft.VisualStudioCode"
 				},
 				{
@@ -115,3 +118,4 @@
 	"WinGetVersion" : "1.12.350"
 
 }
+
