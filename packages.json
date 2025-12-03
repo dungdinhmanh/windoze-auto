@@ -7,10 +7,12 @@
 			"Packages" : 
 			[
 				{
-					"PackageIdentifier" : "7zip.7zip"
+					"PackageIdentifier" : "7zip.7zip",
+					"Override": "--locale=vi-VN"
 				},
 				{
-					"PackageIdentifier" : "Notepad++.Notepad++"
+					"PackageIdentifier" : "Notepad++.Notepad++",
+					"Override": "/VIETNAMESE"
 				},
 				{
 					"PackageIdentifier" : "RARLab.WinRAR"
@@ -37,7 +39,11 @@
 					"PackageIdentifier" : "Neovim.Neovim"
 				},
 				{
-					"PackageIdentifier" : "Google.Chrome"
+					"PackageIdentifier" : "nilesoft.shell"
+				},
+				{
+					"PackageIdentifier" : "Google.Chrome",
+					"Override": "--language=vi"
 				},
 				{
 					"PackageIdentifier" : "OBSProject.OBSStudio"
@@ -64,7 +70,14 @@
 					"PackageIdentifier" : "Fastfetch-cli.Fastfetch"
 				},
 				{
+					"PackageIdentifier" : "voidtools.Everything",
+					"Override": "--language=vi-VN --install-start-menu"
+				},
+				{
 					"PackageIdentifier" : "cURL.cURL"
+				},
+				{
+					"PackageIdentifier" : "VideoLAN.VLC"
 				},
 				{
 					"PackageIdentifier" : "LocalSend.LocalSend"
@@ -118,4 +131,5 @@
 	"WinGetVersion" : "1.12.350"
 
 }
+
 
