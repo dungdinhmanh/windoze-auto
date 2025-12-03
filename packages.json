@@ -19,12 +19,6 @@
 					"PackageIdentifier" : "Alacritty.Alacritty"
 				},
 				{
-					"PackageIdentifier" : "Microsoft.VCRedist.2010.x64"
-				},
-				{
-					"PackageIdentifier" : "Malwarebytes.Malwarebytes"
-				},
-				{
 					"PackageIdentifier" : "Starship.Starship"
 				},
 				{
@@ -43,7 +37,7 @@
 					"PackageIdentifier" : "Neovim.Neovim"
 				},
 				{
-					"PackageIdentifier" : "Google.Chrome.EXE"
+					"PackageIdentifier" : "Google.Chrome"
 				},
 				{
 					"PackageIdentifier" : "OBSProject.OBSStudio"
@@ -81,6 +75,9 @@
 				{
 					"PackageIdentifier" : "nomacs.nomacs"
 				},
+				{ 	
+					"PackageIdentifier" : "Git.Git"
+				},
 				{
 					"PackageIdentifier" : "Microsoft.VisualStudioCode"
 				},
@@ -116,4 +113,5 @@
 		}
 	],
 	"WinGetVersion" : "1.12.350"
+
 }
