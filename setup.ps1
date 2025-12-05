@@ -112,6 +112,8 @@ try {
         $packages = Read-Packages -Path $PackagesJsonUrl
 } catch {
         Write-Error $_
+        Write-Host "Press any key to exit..."
+        $null = [System.Console]::ReadKey($true)
         exit 1
 }
 
@@ -144,3 +146,6 @@ foreach ($pkg in $packages) {
                 Write-Warning "Failed to install package: $($_)"
         }
 }
+
+Write-Host "`nInstallation complete. Press any key to exit..."
+$null = [System.Console]::ReadKey($true)
