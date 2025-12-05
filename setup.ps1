@@ -5,7 +5,7 @@ $packages = Invoke-RestMethod -Uri $packagesUrl
 # Install each package via winget
 foreach ($package in $packages.packages) {
         Write-Host "Installing $($package.id)..."
-        winget install --id $package.id --accept-package-agreements --accept-source-agreements
+        winget import -i $package --accept-package-agreements --accept-source-agreements
 }
 
 Write-Host "Installation complete!"
