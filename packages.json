@@ -74,6 +74,9 @@
 					"Override": "--language=vi-VN --install-start-menu"
 				},
 				{
+					"PackageIdentifier" : "cURL.cURL"
+				},
+				{
 					"PackageIdentifier" : "VideoLAN.VLC"
 				},
 				{
