@@ -1,11 +1,4 @@
-# Download and parse packages.json
-$packagesUrl = "https://raw.githubusercontent.com/dungdinhmanh/windoze-auto/refs/heads/main/packages.json"
-$packages = Invoke-RestMethod -Uri $packagesUrl
+winget install cURL.cURL
+$packages = curl https://raw.githubusercontent.com/dungdinhmanh/windoze-auto/refs/heads/main/packages.json
 
-# Install each package via winget
-foreach ($package in $packages.packages) {
-        Write-Host "Installing $($package.id)..."
-        winget import -i $package --accept-package-agreements --accept-source-agreements
-}
-
-Write-Host "Installation complete!"
+winget import -i $packages --accept-source-agreements
