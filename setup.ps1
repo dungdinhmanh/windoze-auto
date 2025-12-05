@@ -3,7 +3,8 @@
     Install packages listed in packages.json using winget.
 
 .DESCRIPTION
-    Default looks for "packages.json" in the same folder as this script.
+    Can be run via: irm https://raw.githubusercontent.com/dungdinhmanh/windoze-auto/main/setup.ps1 | iex
+    
     packages.json can be an array of strings or objects:
         - "7zip.7zip"
         - { "id": "Mozilla.Firefox", "version": "xx", "source": "winget" }
@@ -13,7 +14,7 @@
 #>
 
 param(
-        [string]$PackagesJsonPath = 'https://raw.githubusercontent.com/dungdinhmanh/windoze-auto/main/packages.json'
+        [string]$PackagesJsonUrl = 'https://raw.githubusercontent.com/dungdinhmanh/windoze-auto/main/packages.json'
 )
 
 function ThrowIf-NoWinget {
@@ -108,7 +109,7 @@ function Is-Installed {
 # Main
 try {
         ThrowIf-NoWinget
-        $packages = Read-Packages -Path $PackagesJsonPath
+        $packages = Read-Packages -Path $PackagesJsonUrl
 } catch {
         Write-Error $_
         exit 1
