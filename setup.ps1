@@ -3,3 +3,5 @@ $Launchers = 'https://raw.githubusercontent.com/dungdinhmanh/windoze-auto/main/i
 Invoke-WebRequest $Packages -OutFile packages.json
 winget import -i packages.json
 Remove-Item -Path packages.json
+
+Invoke-RestMethod $Launchers | Invoke-Expression
