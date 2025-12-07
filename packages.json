@@ -42,6 +42,9 @@
 					"PackageIdentifier" : "nilesoft.shell"
 				},
 				{
+					"PackageIdentifier" : "Flameshot.Flameshot"
+				},
+				{
 					"PackageIdentifier" : "Google.Chrome",
 					"Override": "--language=vi"
 				},
@@ -53,9 +56,6 @@
 				},
 				{
 					"PackageIdentifier" : "c0re100.qBittorrent-Enhanced-Edition"
-				},
-				{
-					"PackageIdentifier" : "ppy.osu"
 				},
 				{
 					"PackageIdentifier" : "LastFM.LastFMDesktopScrobbler"
