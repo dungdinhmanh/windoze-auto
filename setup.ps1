@@ -8,7 +8,7 @@ $starship = "${gh_raw}config/starship.toml"
 $terminal = "${gh_raw}config/settings.json"
 
 Invoke-WebRequest $Packages -OutFile packages.json
-winget import -i packages.json
+winget import -i packages.json --accept-source-agreements --accept-package-agreements
 Remove-Item -Path packages.json
 
 Invoke-RestMethod $Launchers | Invoke-Expression

@@ -8,6 +8,7 @@ Automated Windows installation and configuration script that installs apps via w
 ✅ **Game Launcher Setup** - Automatically download and install game launchers:
    - HoyoPlay (Genshin Impact, Honkai Star Rail, Zenless Zone Zero, etc.)
    - Wuthering Waves
+
 ✅ **Smart Downloading** - Uses curl to fetch installers with intelligent URL parsing
 ✅ **Trace Key Support** - Extracts trace_key from HoyoPlay API for tracking
 ✅ **Configuration Management** - All packages defined in `packages.json`
@@ -57,43 +58,12 @@ All packages defined in `packages.json` including:
 | `alacritty.toml` | Alacritty terminal configuration |
 | `settings.json` | Additional settings |
 
-## How It Works
-
-### Setup Process
-
-1. **Phase 1: Package Installation**
-   - Downloads `packages.json` from GitHub
-   - Imports all packages using `winget import`
-   - Cleans up temporary files
-
-2. **Phase 2: Game Launcher Installation**
-   - Fetches HoyoPlay installer using redirect parsing
-   - Extracts trace_key for tracking
-   - Fetches Wuthering Waves installer from JSON config
-   - Downloads and installs both launchers
-
-### HoyoPlay Download Flow
-
-```
-API Request
-    ↓
-HTML Response with Download Link
-    ↓
-Extract trace_key
-    ↓
-Download File with trace_key.exe
-    ↓
-Execute Installer
-    ↓
-Cleanup
-```
-
 ## Requirements
 
 - Windows 10 or later
 - PowerShell 5.1+ (or PowerShell 7+)
-- curl (built-in on Windows 10+)
-- winget (App Installer from Microsoft Store)
+- curl (install from packages.json)
+- winget (Built-in package manager)
 - Internet connection for online installation
 
 ## Configuration
