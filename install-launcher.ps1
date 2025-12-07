@@ -188,7 +188,7 @@ function Install-GameLauncher {
 # Main execution
 Write-Host ""
 Write-Host "╔════════════════════════════════════════╗" -ForegroundColor Cyan
-Write-Host "║  Game Launcher Installation             ║" -ForegroundColor Cyan
+Write-Host "║  Game Launcher Installation            ║" -ForegroundColor Cyan
 Write-Host "╚════════════════════════════════════════╝" -ForegroundColor Cyan
 Write-Host ""
 
