@@ -7,12 +7,10 @@
 			"Packages" : 
 			[
 				{
-					"PackageIdentifier" : "7zip.7zip",
-					"Override": "--locale=vi-VN"
+					"PackageIdentifier" : "7zip.7zip"
 				},
 				{
-					"PackageIdentifier" : "Notepad++.Notepad++",
-					"Override": "/VIETNAMESE"
+					"PackageIdentifier" : "Notepad++.Notepad++"
 				},
 				{
 					"PackageIdentifier" : "RARLab.WinRAR"
