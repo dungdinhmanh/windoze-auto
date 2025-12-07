@@ -2,18 +2,6 @@
 
 Automated Windows installation and configuration script that installs apps via winget and game launchers (HoyoPlay, Wuthering Waves).
 
-## Features
-
-✅ **Automated Package Installation** - Install all Windows apps in one command using winget  
-✅ **Game Launcher Setup** - Automatically download and install game launchers:
-   - HoyoPlay (Genshin Impact, Honkai Star Rail, Zenless Zone Zero, etc.)
-   - Wuthering Waves
-
-✅ **Smart Downloading** - Uses curl to fetch installers with intelligent URL parsing
-✅ **Trace Key Support** - Extracts trace_key from HoyoPlay API for tracking
-✅ **Configuration Management** - All packages defined in `packages.json`
-✅ **Terminal Configs** - Includes PowerShell profile and Alacritty terminal settings
-
 ## Installation
 
 ### Method 1: Direct PowerShell (Recommended)
