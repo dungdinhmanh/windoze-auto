@@ -1,11 +1,11 @@
 $gh_raw = 'https://raw.githubusercontent.com/dungdinhmanh/windoze-auto/main/'
-$Packages = "${gh_raw}packages.json"
-$Launchers = "${gh_raw}install-launcher.ps1"
-$PwshProfile = "${gh_raw}Microsoft.PowerShell_profile.ps1"
-$starship = "${gh_raw}starship.toml"
-$terminal = "${gh_raw}settings.json"
-$notepad_catpuccin = 'https://github.com/catppuccin/notepad-plus-plus/blob/main/themes/catppuccin-mocha.xml'
-$font = "${gh_raw}install-font.ps1"
+$Packages = "${gh_raw}config/packages.json"
+$Launchers = "${gh_raw}install_script/install-launcher.ps1"
+$PwshProfile = "${gh_raw}config/Microsoft.PowerShell_profile.ps1"
+$starship = "${gh_raw}config/starship.toml"
+$terminal = "${gh_raw}config/settings.json"
+$notepad_catpuccin = 'https://raw.githubusercontent.com/catppuccin/notepad-plus-plus/main/themes/catppuccin-mocha.xml'
+$font = "${gh_raw}install_script/install-font.ps1"
 
 Invoke-WebRequest $Packages -OutFile packages.json
 winget import -i packages.json
