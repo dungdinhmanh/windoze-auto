@@ -1,17 +1,3 @@
-<#
-.SYNOPSIS
-    Game launcher installer script.
-
-.DESCRIPTION
-    Downloads and installs game launchers:
-    - HoyoPlay launcher (Genshin Impact, Honkai Star Rail, etc.)
-    - Wuthering Waves launcher
-
-    This script is called by setup.ps1 after all apps are installed.
-    Uses curl to download games and parses JSON/HTML responses.
-
-    Usage: .\install-launcher.ps1
-#>
 
 param(
     [string]$HoyoPlayUrl = 'https://sg-public-api.hoyoverse.com/event/download_porter/trace/hyp_global/hyphoyoverse/default?url=https%3A%2F%2Fhoyoplay.hoyoverse.com%2F',
@@ -31,19 +17,45 @@ function Get-RedirectUrl {
         Write-Host "Fetching download link..." -ForegroundColor Yellow
         
         # Use curl to get the HTML response (without -L flag to get the redirect page)
-        $response = curl -s $Url
+        $response = curl -s $Url 2>&1
+        
+        if ($null -eq $response -or [string]::IsNullOrWhiteSpace($response)) {
+            throw "Empty response from URL. Check your internet connection."
+        }
+        
+        # Convert response to string if needed
+        $responseString = $response -join " "
+        
+        Write-Host "Response received, parsing..." -ForegroundColor Yellow
         
         # Parse the href from the HTML response
-        # Pattern: <a href="actual_download_url">Found</a>
-        if ($response -match 'href="([^"]+)"') {
+        # Pattern: <a href="actual_download_url?trace_key=xyz">Found</a>
+        if ($responseString -match 'href="([^"]+)"') {
             $actualUrl = $matches[1]
-            Write-Host "Found actual download URL" -ForegroundColor Green
             return $actualUrl
         } else {
-            throw "Could not extract download URL from response"
+            Write-Host "Response content: $responseString" -ForegroundColor Gray
+            throw "Could not extract download URL from response. Response may be invalid."
         }
     } catch {
         throw "Failed to get redirect URL: $_"
+    }
+}
+
+function Get-TraceKeyFromUrl {
+    param([string]$Url)
+    
+    try {
+        # Extract trace_key from URL
+        # Pattern: trace_key=xyz
+        if ($Url -match 'trace_key=([a-zA-Z0-9_]+)') {
+            $traceKey = $matches[1]
+            return $traceKey
+        } else {
+            throw "Could not extract trace_key from URL"
+        }
+    } catch {
+        throw "Failed to extract trace_key: $_"
     }
 }
 
@@ -57,10 +69,19 @@ function Get-JsonField {
         Write-Host "Fetching configuration..." -ForegroundColor Yellow
         
         # Use curl to get JSON response
-        $jsonResponse = curl -s $JsonUrl
+        $jsonResponse = curl -s $JsonUrl 2>&1
+        
+        if ($null -eq $jsonResponse -or [string]::IsNullOrWhiteSpace($jsonResponse)) {
+            throw "Empty response from URL. Check your internet connection."
+        }
+        
+        # Convert response to string if needed
+        $jsonString = $jsonResponse -join ""
+        
+        Write-Host "Response received, parsing JSON..." -ForegroundColor Yellow
         
         # Parse JSON
-        $json = ConvertFrom-Json -InputObject $jsonResponse -ErrorAction Stop
+        $json = ConvertFrom-Json -InputObject $jsonString -ErrorAction Stop
         
         # Get the field value (try primary first, fallback to secondary/third)
         if ($json.$FieldName) {
@@ -88,7 +109,7 @@ function Install-GameLauncher {
     try {
         Write-Host ""
         Write-Host "╔════════════════════════════════════════╗" -ForegroundColor Cyan
-        Write-Host "║  Installing $Name" -ForegroundColor Cyan
+        Write-Host "║ Installing $Name                    ║" -ForegroundColor Cyan
         Write-Host "╚════════════════════════════════════════╝" -ForegroundColor Cyan
         Write-Host ""
         
@@ -105,22 +126,40 @@ function Install-GameLauncher {
         }
         
         Write-Host "Download URL: $downloadUrl" -ForegroundColor Gray
+        
+        # For HoyoPlay, extract trace_key to use as filename
+        $finalInstallerPath = $InstallerPath
+        $traceKey = $null
+        
+        if ($Name -eq "HoyoPlay") {
+            if ($downloadUrl -match 'trace_key=([a-zA-Z0-9_\.]+)') {
+                $traceKey = $matches[1]
+                $finalInstallerPath = Join-Path (Split-Path $InstallerPath) "$traceKey.exe"
+            }
+        }
+        
         Write-Host ""
         Write-Host "Downloading $Name installer..." -ForegroundColor Yellow
         
-        # Download the installer
-        curl -L -o $InstallerPath $downloadUrl
+        # For HoyoPlay, use curl -L with the original API URL
+        if ($Name -eq "HoyoPlay" -and $traceKey) {
+            # Curl -L to follow redirects and save with trace_key as filename
+            curl -L -o $finalInstallerPath $Url
+        } else {
+            # For other games, use the extracted download URL
+            curl -L -o $finalInstallerPath $downloadUrl
+        }
         
-        if (-not (Test-Path $InstallerPath)) {
+        if (-not (Test-Path $finalInstallerPath)) {
             throw "Failed to download $Name installer"
         }
         
-        $fileSize = (Get-Item $InstallerPath).Length / 1MB
+        $fileSize = (Get-Item $finalInstallerPath).Length / 1MB
         Write-Host "Downloaded $Name installer ($([math]::Round($fileSize, 2)) MB)" -ForegroundColor Green
         Write-Host ""
         Write-Host "Running $Name installer..." -ForegroundColor Yellow
         
-        Start-Process -FilePath $InstallerPath -Wait
+        Start-Process -FilePath $finalInstallerPath -Wait
         
         Write-Host "$Name installation completed" -ForegroundColor Green
         
@@ -136,17 +175,20 @@ function Install-GameLauncher {
         }
         Write-Host ""
     } finally {
-        # Cleanup temp file
+        # Cleanup temp files
         if (Test-Path $InstallerPath) {
             Remove-Item -Path $InstallerPath -Force -ErrorAction SilentlyContinue
         }
+        # Also cleanup trace_key named file if it exists
+        $tempDirPath = Split-Path $InstallerPath
+        Get-Item "$tempDirPath\*_*.exe" -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
     }
 }
 
 # Main execution
 Write-Host ""
 Write-Host "╔════════════════════════════════════════╗" -ForegroundColor Cyan
-Write-Host "║  Game Launcher Installation           ║" -ForegroundColor Cyan
+Write-Host "║  Game Launcher Installation             ║" -ForegroundColor Cyan
 Write-Host "╚════════════════════════════════════════╝" -ForegroundColor Cyan
 Write-Host ""
 
@@ -166,7 +208,7 @@ Install-GameLauncher `
 
 Write-Host ""
 Write-Host "╔════════════════════════════════════════╗" -ForegroundColor Green
-Write-Host "║  Game Launcher Installation Complete! ║" -ForegroundColor Green
+Write-Host "║  Game Launcher Installation Complete!  ║" -ForegroundColor Green
 Write-Host "╚════════════════════════════════════════╝" -ForegroundColor Green
 Write-Host ""
 
