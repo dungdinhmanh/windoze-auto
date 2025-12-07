@@ -5,6 +5,7 @@ $starship = 'https://raw.githubusercontent.com/dungdinhmanh/windoze-auto/main/st
 $terminal = 'https://raw.githubusercontent.com/dungdinhmanh/windoze-auto/main/settings.json'
 $notepad_catpuccin = 'https://github.com/catppuccin/notepad-plus-plus/blob/main/themes/catppuccin-mocha.xml'
 $font = 'https://raw.githubusercontent.com/dungdinhmanh/windoze-auto/main/install-font.ps1'
+
 Invoke-WebRequest $Packages -OutFile packages.json
 winget import -i packages.json
 Remove-Item -Path packages.json
