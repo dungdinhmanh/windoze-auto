@@ -1,133 +1,143 @@
 {
-	"$schema" : "https://aka.ms/winget-packages.schema.2.0.json",
-	"CreationDate" : "2025-12-02T19:55:23.332-00:00",
-	"Sources" : 
-	[
-		{
-			"Packages" : 
-			[
-				{
-					"PackageIdentifier" : "7zip.7zip"
-				},
-				{
-					"PackageIdentifier" : "Notepad++.Notepad++"
-				},
-				{
-					"PackageIdentifier" : "RARLab.WinRAR"
-				},
-				{
-					"PackageIdentifier" : "WinMerge.WinMerge"
-				},
-				{
-					"PackageIdentifier" : "Starship.Starship"
-				},
-				{
-					"PackageIdentifier" : "Cloudflare.Warp"
-				},
-				{
-					"PackageIdentifier" : "Oracle.VirtualBox"
-				},
-				{
-					"PackageIdentifier" : "Microsoft.PowerShell.Preview"
-				},
-				{
-					"PackageIdentifier" : "CodeSector.TeraCopy"
-				},
-				{
-					"PackageIdentifier" : "Neovim.Neovim"
-				},
-				{
-					"PackageIdentifier" : "nilesoft.shell"
-				},
-				{
-					"PackageIdentifier" : "Flameshot.Flameshot"
-				},
-				{
-					"PackageIdentifier" : "Google.Chrome",
-					"Override": "--language=vi"
-				},
-				{
-					"PackageIdentifier" : "OBSProject.OBSStudio"
-				},
-				{
-					"PackageIdentifier" : "Valve.Steam"
-				},
-				{
-					"PackageIdentifier" : "c0re100.qBittorrent-Enhanced-Edition"
-				},
-				{
-					"PackageIdentifier" : "LastFM.LastFMDesktopScrobbler"
-				},
-				{
-					"PackageIdentifier" : "Bitwarden.Bitwarden"
-				},
-				{
-					"PackageIdentifier" : "Discord.Discord"
-				},
-				{
-					"PackageIdentifier" : "Fastfetch-cli.Fastfetch"
-				},
-				{
-					"PackageIdentifier" : "voidtools.Everything",
-					"Override": "--language=vi-VN --install-start-menu"
-				},
-				{
-					"PackageIdentifier" : "cURL.cURL"
-				},
-				{
-					"PackageIdentifier" : "VideoLAN.VLC"
-				},
-				{
-					"PackageIdentifier" : "LocalSend.LocalSend"
-				},
-				{
-					"PackageIdentifier" : "Python.Python.3.13"
-				},
-				{
-					"PackageIdentifier" : "nomacs.nomacs"
-				},
-				{ 	
-					"PackageIdentifier" : "Git.Git"
-				},
-				{
-					"PackageIdentifier" : "OpenJS.NodeJS.LTS"
-				},
-				{
-					"PackageIdentifier" : "Microsoft.VisualStudioCode"
-				},
-				{
-					"PackageIdentifier" : "MartiCliment.UniGetUI"
-				},
-				{
-					"PackageIdentifier" : "Microsoft.AppInstaller"
-				}
-			],
-			"SourceDetails" : 
-			{
-				"Argument" : "https://cdn.winget.microsoft.com/cache",
-				"Identifier" : "Microsoft.Winget.Source_8wekyb3d8bbwe",
-				"Name" : "winget",
-				"Type" : "Microsoft.PreIndexed.Package"
-			}
-		},
-		{
-			"Packages" : 
-			[
-				{
-					"PackageIdentifier" : "9N8G5RFZ9XK3"
-				}
-			],
-			"SourceDetails" : 
-			{
-				"Argument" : "https://storeedgefd.dsx.mp.microsoft.com/v9.0",
-				"Identifier" : "StoreEdgeFD",
-				"Name" : "msstore",
-				"Type" : "Microsoft.Rest"
-			}
-		}
-	],
-	"WinGetVersion" : "1.12.350"
-
+  "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
+  "CreationDate": "2025-12-02T19:55:23.332-00:00",
+  "Sources": [
+    {
+      "Packages": [
+        {
+          "PackageIdentifier": "7zip.7zip"
+        },
+        {
+          "PackageIdentifier": "Notepad++.Notepad++"
+        },
+        {
+          "PackageIdentifier": "RARLab.WinRAR"
+        },
+        {
+          "PackageIdentifier": "WinMerge.WinMerge"
+        },
+        {
+          "PackageIdentifier": "Starship.Starship"
+        },
+        {
+          "PackageIdentifier": "Cloudflare.Warp"
+        },
+        {
+          "PackageIdentifier": "Oracle.VirtualBox"
+        },
+        {
+          "PackageIdentifier": "Microsoft.PowerShell.Preview"
+        },
+        {
+          "PackageIdentifier": "CodeSector.TeraCopy"
+        },
+        {
+          "PackageIdentifier": "Neovim.Neovim"
+        },
+        {
+          "PackageIdentifier": "nilesoft.shell"
+        },
+        {
+          "PackageIdentifier": "Flameshot.Flameshot"
+        },
+        {
+          "PackageIdentifier": "Google.Chrome",
+          "Override": "--language=vi"
+        },
+        {
+          "PackageIdentifier": "OBSProject.OBSStudio"
+        },
+        {
+          "PackageIdentifier": "Valve.Steam"
+        },
+        {
+          "PackageIdentifier": "c0re100.qBittorrent-Enhanced-Edition"
+        },
+        {
+          "PackageIdentifier": "LastFM.LastFMDesktopScrobbler"
+        },
+        {
+          "PackageIdentifier": "Bitwarden.Bitwarden"
+        },
+        {
+          "PackageIdentifier": "Bitwarden.CLI"
+        },
+        {
+          "PackageIdentifier": "Discord.Discord"
+        },
+        {
+          "PackageIdentifier": "WinMerge.WinMerge"
+        },
+        {
+          "PackageIdentifier": "aristocratos.btop4win"
+        },
+        {
+          "PackageIdentifier": "Fastfetch-cli.Fastfetch"
+        },
+        {
+          "PackageIdentifier": "voidtools.Everything",
+          "Override": "--language=vi-VN --install-start-menu"
+        },
+        {
+          "PackageIdentifier": "cURL.cURL"
+        },
+        {
+          "PackageIdentifier": "LGUG2Z.komorebi"
+        },
+        {
+          "PackageIdentifier": "LGUG2Z.whkd"
+        },
+        {
+          "PackageIdentifier": "AmN.yasb"
+        },
+        {
+          "PackageIdentifier": "VideoLAN.VLC"
+        },
+        {
+          "PackageIdentifier": "LocalSend.LocalSend"
+        },
+        {
+          "PackageIdentifier": "Python.Python.3.13"
+        },
+        {
+          "PackageIdentifier": "nomacs.nomacs"
+        },
+        {
+          "PackageIdentifier": "Git.Git"
+        },
+        {
+          "PackageIdentifier": "OpenJS.NodeJS.LTS"
+        },
+        {
+          "PackageIdentifier": "Microsoft.VisualStudioCode"
+        },
+        {
+          "PackageIdentifier": "MartiCliment.UniGetUI"
+        },
+        {
+          "PackageIdentifier": "Microsoft.AppInstaller"
+        }
+      ],
+      "SourceDetails": {
+        "Argument": "https://cdn.winget.microsoft.com/cache",
+        "Identifier": "Microsoft.Winget.Source_8wekyb3d8bbwe",
+        "Name": "winget",
+        "Type": "Microsoft.PreIndexed.Package"
+      }
+    },
+    {
+      "Packages": [
+        {
+          "PackageIdentifier": "9N8G5RFZ9XK3"
+        }
+      ],
+      "SourceDetails": {
+        "Argument": "https://storeedgefd.dsx.mp.microsoft.com/v9.0",
+        "Identifier": "StoreEdgeFD",
+        "Name": "msstore",
+        "Type": "Microsoft.Rest"
+      }
+    }
+  ],
+  "WinGetVersion": "1.12.350"
 }
-
-
