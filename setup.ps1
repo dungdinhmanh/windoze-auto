@@ -18,3 +18,4 @@ Invoke-RestMethod $PwshProfile -OutFile "$HOME\Documents\PowerShell\Microsoft.Po
 Invoke-RestMethod $starship -OutFile "$HOME\starship.toml"
 Invoke-RestMethod $terminal -OutFile "$HOME\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
 Invoke-RestMethod $notepad_catpuccin -OutFile "C:\Program Files\Notepad++\themes\catppuccin-mocha.xml"
+Install-Module -Name Terminal-Icons -Repository PSGallery
