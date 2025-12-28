@@ -72,6 +72,21 @@
           "PackageIdentifier": "aristocratos.btop4win"
         },
         {
+          "PackageIdentifier": "LRCLIB.LRCGET"
+        },
+        {
+          "PackageIdentifier": "karlstav.cava"
+        },
+        {
+          "PackageIdentifier": "JernejSimoncic.Wget"
+        },
+        {
+          "PackageIdentifier": "BurntSushi.ripgrep.MSVC"
+        },
+        {
+          "PackageIdentifier": "ajeetdsouza.zoxide"
+        },
+        {
           "PackageIdentifier": "Fastfetch-cli.Fastfetch"
         },
         {
@@ -79,13 +94,10 @@
           "Override": "--language=vi-VN --install-start-menu"
         },
         {
+          "PackageIdentifier": "srwi.EverythingToolbar.Launcher"
+        },
+        {
           "PackageIdentifier": "cURL.cURL"
-        },
-        {
-          "PackageIdentifier": "LGUG2Z.komorebi"
-        },
-        {
-          "PackageIdentifier": "LGUG2Z.whkd"
         },
         {
           "PackageIdentifier": "AmN.yasb"
@@ -97,6 +109,9 @@
           "PackageIdentifier": "LocalSend.LocalSend"
         },
         {
+          "PackageIdentifier": "AlexanderKojevnikov.Spek"
+        },
+        {
           "PackageIdentifier": "Python.Python.3.13"
         },
         {
@@ -104,6 +119,9 @@
         },
         {
           "PackageIdentifier": "Git.Git"
+        },
+        {
+          "PackageIdentifier": "Obsidian.Obsidian"
         },
         {
           "PackageIdentifier": "OpenJS.NodeJS.LTS"
