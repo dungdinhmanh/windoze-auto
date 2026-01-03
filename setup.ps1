@@ -36,28 +36,18 @@ function Invoke-Setup {
             winget install Git.Git --accept-source-agreements --accept-package-agreements --force
             
             # Verify Git was installed
-            if (-not (Test-Path "C:\Program Files\Git\cmd")) {
+            $gitExe = "C:\Program Files\Git\cmd\git.exe"
+            if (-not (Test-Path $gitExe)) {
                 Write-Host "Git installation failed. Please restart PowerShell and run the script again." -ForegroundColor Red
                 Write-Host "Press any key to exit..."
                 $null = [System.Console]::ReadKey($true)
                 exit 1
             }
+            Write-Host "Git installed successfully" -ForegroundColor Green
             
-            # Restart PowerShell with the same script to reload PATH
-            Write-Host ""
-            Write-Host "Git installed successfully. Restarting PowerShell to reload PATH..." -ForegroundColor Green
-            Write-Host ""
-            
-            $scriptPath = $MyInvocation.MyCommand.Path
-            if ($scriptPath) {
-                # Running from file
-                Start-Process powershell -ArgumentList "-NoExit", "-Command", "& '$scriptPath'" -Wait
-            } else {
-                # Running from pipe (irm | iex)
-                Write-Host "Script restarted in new PowerShell session. Please wait..." -ForegroundColor Yellow
-                Start-Process powershell -NoNewWindow -Wait
-            }
-            exit 0
+            # Create an alias for git to use full path
+            Remove-Item Alias:git -Force -ErrorAction SilentlyContinue
+            Set-Alias -Name git -Value $gitExe -Scope Global
         }
         
         git clone $repoUrl $clonePath
@@ -86,7 +76,7 @@ function Invoke-Setup {
         $launcherScript = Join-Path $clonePath "install_script\install-launcher.ps1"
         
         if (Test-Path $launcherScript) {
-            & $launcherScript
+            & powershell -ExecutionPolicy Bypass -File $launcherScript
             Write-Host "Game launchers installed successfully" -ForegroundColor Green
         } else {
             Write-Host "install-launcher.ps1 not found, skipping..." -ForegroundColor Yellow
@@ -98,7 +88,7 @@ function Invoke-Setup {
         $fontScript = Join-Path $clonePath "install_script\install-font.ps1"
         
         if (Test-Path $fontScript) {
-            & $fontScript
+            & powershell -ExecutionPolicy Bypass -File $fontScript
             Write-Host "Fonts installed successfully" -ForegroundColor Green
         } else {
             Write-Host "install-font.ps1 not found, skipping..." -ForegroundColor Yellow
@@ -173,6 +163,49 @@ function Invoke-Setup {
             } catch {
                 Write-Host "Failed to download Notepad++ theme" -ForegroundColor Yellow
             }
+        }
+        
+        # Neovim config
+        $nvimRepoUrl = 'https://github.com/dungdinhmanh/nvim.git'
+        $nvimConfigDir = "$env:LOCALAPPDATA\nvim"
+        $nvimClonePath = Join-Path $env:TEMP "nvim-config"
+        
+        if (Test-Path $nvimConfigDir) {
+            Remove-Item -Path $nvimConfigDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+        
+        try {
+            git clone $nvimRepoUrl $nvimClonePath
+            if (Test-Path $nvimClonePath) {
+                # Create parent directory if needed
+                if (-not (Test-Path $env:LOCALAPPDATA)) {
+                    New-Item -ItemType Directory -Path $env:LOCALAPPDATA -Force | Out-Null
+                }
+                Move-Item -Path $nvimClonePath -Destination $nvimConfigDir -Force
+                Write-Host "Cloned Neovim config to $nvimConfigDir" -ForegroundColor Green
+            }
+        } catch {
+            Write-Host "Failed to clone Neovim config: $_" -ForegroundColor Yellow
+        }
+        Write-Host ""
+        
+        # Obsidian vault
+        $obsidianRepoUrl = 'https://github.com/dungdinhmanh/obsidian.git'
+        $obsidianVaultDir = "$HOME\Documents\obsidian"
+        $obsidianClonePath = Join-Path $env:TEMP "obsidian-vault"
+        
+        if (Test-Path $obsidianVaultDir) {
+            Remove-Item -Path $obsidianVaultDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+        
+        try {
+            git clone $obsidianRepoUrl $obsidianClonePath
+            if (Test-Path $obsidianClonePath) {
+                Move-Item -Path $obsidianClonePath -Destination $obsidianVaultDir -Force
+                Write-Host "Cloned Obsidian vault to $obsidianVaultDir" -ForegroundColor Green
+            }
+        } catch {
+            Write-Host "Failed to clone Obsidian vault: $_" -ForegroundColor Yellow
         }
         Write-Host ""
         
