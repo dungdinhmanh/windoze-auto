@@ -33,7 +33,7 @@ function Invoke-Setup {
         # Check if git is available
         if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
             Write-Host "Git not found. Installing via winget..." -ForegroundColor Yellow
-            winget install Git.Git --accept-source-agreements --accept-package-agreements -q
+            winget install Git.Git --accept-source-agreements --accept-package-agreements --force
         }
         
         git clone $repoUrl $clonePath
