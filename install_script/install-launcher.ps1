@@ -42,23 +42,6 @@ function Get-RedirectUrl {
     }
 }
 
-function Get-TraceKeyFromUrl {
-    param([string]$Url)
-    
-    try {
-        # Extract trace_key from URL
-        # Pattern: trace_key=xyz
-        if ($Url -match 'trace_key=([a-zA-Z0-9_]+)') {
-            $traceKey = $matches[1]
-            return $traceKey
-        } else {
-            throw "Could not extract trace_key from URL"
-        }
-    } catch {
-        throw "Failed to extract trace_key: $_"
-    }
-}
-
 function Get-JsonField {
     param(
         [string]$JsonUrl,
@@ -215,6 +198,3 @@ Write-Host ""
 if (Test-Path $TempDir) {
     Remove-Item -Path $TempDir -Force -Recurse -ErrorAction SilentlyContinue
 }
-
-Write-Host "Press any key to exit..."
-$null = [System.Console]::ReadKey($true)
