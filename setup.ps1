@@ -34,6 +34,30 @@ function Invoke-Setup {
         if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
             Write-Host "Git not found. Installing via winget..." -ForegroundColor Yellow
             winget install Git.Git --accept-source-agreements --accept-package-agreements --force
+            
+            # Verify Git was installed
+            if (-not (Test-Path "C:\Program Files\Git\cmd")) {
+                Write-Host "Git installation failed. Please restart PowerShell and run the script again." -ForegroundColor Red
+                Write-Host "Press any key to exit..."
+                $null = [System.Console]::ReadKey($true)
+                exit 1
+            }
+            
+            # Restart PowerShell with the same script to reload PATH
+            Write-Host ""
+            Write-Host "Git installed successfully. Restarting PowerShell to reload PATH..." -ForegroundColor Green
+            Write-Host ""
+            
+            $scriptPath = $MyInvocation.MyCommand.Path
+            if ($scriptPath) {
+                # Running from file
+                Start-Process powershell -ArgumentList "-NoExit", "-Command", "& '$scriptPath'" -Wait
+            } else {
+                # Running from pipe (irm | iex)
+                Write-Host "Script restarted in new PowerShell session. Please wait..." -ForegroundColor Yellow
+                Start-Process powershell -NoNewWindow -Wait
+            }
+            exit 0
         }
         
         git clone $repoUrl $clonePath
