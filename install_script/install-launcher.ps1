@@ -154,8 +154,7 @@ function Install-GameLauncher {
             throw "Failed to download $Name installer"
         }
         
-        $fileSize = (Get-Item $finalInstallerPath).Length / 1MB
-        Write-Host "Downloaded $Name installer ($([math]::Round($fileSize, 2)) MB)" -ForegroundColor Green
+        Write-Host "Downloaded $Name installer successfully" -ForegroundColor Green
         Write-Host ""
         Write-Host "Running $Name installer..." -ForegroundColor Yellow
         
