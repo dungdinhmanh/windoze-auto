@@ -16,20 +16,17 @@ function Get-RedirectUrl {
     try {
         Write-Host "Fetching download link..." -ForegroundColor Yellow
         
-        # Use curl to get the HTML response (without -L flag to get the redirect page)
-        $response = curl -s $Url 2>&1
+        # Use Invoke-WebRequest to get the HTML response
+        $response = Invoke-WebRequest -Uri $Url -UseBasicParsing -ErrorAction Stop
+        $responseString = $response.Content
         
-        if ($null -eq $response -or [string]::IsNullOrWhiteSpace($response)) {
+        if ([string]::IsNullOrWhiteSpace($responseString)) {
             throw "Empty response from URL. Check your internet connection."
         }
-        
-        # Convert response to string if needed
-        $responseString = $response -join " "
         
         Write-Host "Response received, parsing..." -ForegroundColor Yellow
         
         # Parse the href from the HTML response
-        # Pattern: <a href="actual_download_url?trace_key=xyz">Found</a>
         if ($responseString -match 'href="([^"]+)"') {
             $actualUrl = $matches[1]
             return $actualUrl
@@ -51,15 +48,13 @@ function Get-JsonField {
     try {
         Write-Host "Fetching configuration..." -ForegroundColor Yellow
         
-        # Use curl to get JSON response
-        $jsonResponse = curl -s $JsonUrl 2>&1
+        # Use Invoke-WebRequest to get JSON response
+        $response = Invoke-WebRequest -Uri $JsonUrl -UseBasicParsing -ErrorAction Stop
+        $jsonString = $response.Content
         
-        if ($null -eq $jsonResponse -or [string]::IsNullOrWhiteSpace($jsonResponse)) {
+        if ([string]::IsNullOrWhiteSpace($jsonString)) {
             throw "Empty response from URL. Check your internet connection."
         }
-        
-        # Convert response to string if needed
-        $jsonString = $jsonResponse -join ""
         
         Write-Host "Response received, parsing JSON..." -ForegroundColor Yellow
         
@@ -124,13 +119,17 @@ function Install-GameLauncher {
         Write-Host ""
         Write-Host "Downloading $Name installer..." -ForegroundColor Yellow
         
-        # For HoyoPlay, use curl -L with the original API URL
-        if ($Name -eq "HoyoPlay" -and $traceKey) {
-            # Curl -L to follow redirects and save with trace_key as filename
-            curl -L -o $finalInstallerPath $Url
-        } else {
-            # For other games, use the extracted download URL
-            curl -L -o $finalInstallerPath $downloadUrl
+        # Download the installer
+        try {
+            if ($Name -eq "HoyoPlay" -and $traceKey) {
+                # For HoyoPlay, follow redirects from original API URL
+                Invoke-WebRequest -Uri $Url -OutFile $finalInstallerPath -UseBasicParsing
+            } else {
+                # For other games, use the extracted download URL
+                Invoke-WebRequest -Uri $downloadUrl -OutFile $finalInstallerPath -UseBasicParsing
+            }
+        } catch {
+            throw "Failed to download $Name installer: $_"
         }
         
         if (-not (Test-Path $finalInstallerPath)) {
