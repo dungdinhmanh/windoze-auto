@@ -16,17 +16,20 @@ function Get-RedirectUrl {
     try {
         Write-Host "Fetching download link..." -ForegroundColor Yellow
         
-        # Use Invoke-WebRequest to get the HTML response
-        $response = Invoke-WebRequest -Uri $Url -UseBasicParsing -ErrorAction Stop
-        $responseString = $response.Content
+        # Use curl to get the HTML response (without -L flag to get the redirect page)
+        $response = curl.exe -s $Url 2>&1
         
-        if ([string]::IsNullOrWhiteSpace($responseString)) {
+        if ($null -eq $response -or [string]::IsNullOrWhiteSpace($response)) {
             throw "Empty response from URL. Check your internet connection."
         }
+        
+        # Convert response to string if needed
+        $responseString = $response -join " "
         
         Write-Host "Response received, parsing..." -ForegroundColor Yellow
         
         # Parse the href from the HTML response
+        # Pattern: <a href="actual_download_url?trace_key=xyz">Found</a>
         if ($responseString -match 'href="([^"]+)"') {
             $actualUrl = $matches[1]
             return $actualUrl
@@ -48,13 +51,15 @@ function Get-JsonField {
     try {
         Write-Host "Fetching configuration..." -ForegroundColor Yellow
         
-        # Use Invoke-WebRequest to get JSON response
-        $response = Invoke-WebRequest -Uri $JsonUrl -UseBasicParsing -ErrorAction Stop
-        $jsonString = $response.Content
+        # Use curl to get JSON response
+        $jsonResponse = curl -s $JsonUrl 2>&1
         
-        if ([string]::IsNullOrWhiteSpace($jsonString)) {
+        if ($null -eq $jsonResponse -or [string]::IsNullOrWhiteSpace($jsonResponse)) {
             throw "Empty response from URL. Check your internet connection."
         }
+        
+        # Convert response to string if needed
+        $jsonString = $jsonResponse -join ""
         
         Write-Host "Response received, parsing JSON..." -ForegroundColor Yellow
         
@@ -86,9 +91,9 @@ function Install-GameLauncher {
     
     try {
         Write-Host ""
-        Write-Host "==================================================" -ForegroundColor Cyan
-        Write-Host "Installing $Name" -ForegroundColor Cyan
-        Write-Host "==================================================" -ForegroundColor Cyan
+        Write-Host "╔════════════════════════════════════════╗" -ForegroundColor Cyan
+        Write-Host "║ Installing $Name                    ║" -ForegroundColor Cyan
+        Write-Host "╚════════════════════════════════════════╝" -ForegroundColor Cyan
         Write-Host ""
         
         # Check if curl is available
@@ -119,17 +124,13 @@ function Install-GameLauncher {
         Write-Host ""
         Write-Host "Downloading $Name installer..." -ForegroundColor Yellow
         
-        # Download the installer
-        try {
-            if ($Name -eq "HoyoPlay" -and $traceKey) {
-                # For HoyoPlay, follow redirects from original API URL
-                Invoke-WebRequest -Uri $Url -OutFile $finalInstallerPath -UseBasicParsing
-            } else {
-                # For other games, use the extracted download URL
-                Invoke-WebRequest -Uri $downloadUrl -OutFile $finalInstallerPath -UseBasicParsing
-            }
-        } catch {
-            throw "Failed to download $Name installer: $_"
+        # For HoyoPlay, use curl -L with the original API URL
+        if ($Name -eq "HoyoPlay" -and $traceKey) {
+            # Curl -L to follow redirects and save with trace_key as filename
+            curl.exe -L -o $finalInstallerPath $Url
+        } else {
+            # For other games, use the extracted download URL
+            curl.exe -L -o $finalInstallerPath $downloadUrl
         }
         
         if (-not (Test-Path $finalInstallerPath)) {
@@ -168,9 +169,9 @@ function Install-GameLauncher {
 
 # Main execution
 Write-Host ""
-Write-Host "==================================================" -ForegroundColor Cyan
-Write-Host "Game Launcher Installation" -ForegroundColor Cyan
-Write-Host "==================================================" -ForegroundColor Cyan
+Write-Host "╔════════════════════════════════════════╗" -ForegroundColor Cyan
+Write-Host "║  Game Launcher Installation            ║" -ForegroundColor Cyan
+Write-Host "╚════════════════════════════════════════╝" -ForegroundColor Cyan
 Write-Host ""
 
 # Install HoyoPlay
@@ -188,9 +189,9 @@ Install-GameLauncher `
     -UrlType 'json'
 
 Write-Host ""
-Write-Host "==================================================" -ForegroundColor Green
-Write-Host "Game Launcher Installation Complete!" -ForegroundColor Green
-Write-Host "==================================================" -ForegroundColor Green
+Write-Host "╔════════════════════════════════════════╗" -ForegroundColor Green
+Write-Host "║  Game Launcher Installation Complete!  ║" -ForegroundColor Green
+Write-Host "╚════════════════════════════════════════╝" -ForegroundColor Green
 Write-Host ""
 
 # Cleanup temp directory
