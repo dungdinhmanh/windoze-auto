@@ -91,9 +91,9 @@ function Install-GameLauncher {
     
     try {
         Write-Host ""
-        Write-Host "╔════════════════════════════════════════╗" -ForegroundColor Cyan
-        Write-Host "║ Installing $Name                    ║" -ForegroundColor Cyan
-        Write-Host "╚════════════════════════════════════════╝" -ForegroundColor Cyan
+        Write-Host "==================================================" -ForegroundColor Cyan
+        Write-Host "Installing $Name" -ForegroundColor Cyan
+        Write-Host "==================================================" -ForegroundColor Cyan
         Write-Host ""
         
         # Check if curl is available
@@ -169,9 +169,9 @@ function Install-GameLauncher {
 
 # Main execution
 Write-Host ""
-Write-Host "╔════════════════════════════════════════╗" -ForegroundColor Cyan
-Write-Host "║  Game Launcher Installation            ║" -ForegroundColor Cyan
-Write-Host "╚════════════════════════════════════════╝" -ForegroundColor Cyan
+Write-Host "==================================================" -ForegroundColor Cyan
+Write-Host "Game Launcher Installation" -ForegroundColor Cyan
+Write-Host "==================================================" -ForegroundColor Cyan
 Write-Host ""
 
 # Install HoyoPlay
@@ -189,9 +189,9 @@ Install-GameLauncher `
     -UrlType 'json'
 
 Write-Host ""
-Write-Host "╔════════════════════════════════════════╗" -ForegroundColor Green
-Write-Host "║  Game Launcher Installation Complete!  ║" -ForegroundColor Green
-Write-Host "╚════════════════════════════════════════╝" -ForegroundColor Green
+Write-Host "==================================================" -ForegroundColor Green
+Write-Host "Game Launcher Installation Complete!" -ForegroundColor Green
+Write-Host "==================================================" -ForegroundColor Green
 Write-Host ""
 
 # Cleanup temp directory
