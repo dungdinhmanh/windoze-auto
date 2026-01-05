@@ -52,7 +52,7 @@ function Get-JsonField {
         Write-Host "Fetching configuration..." -ForegroundColor Yellow
         
         # Use curl to get JSON response
-        $jsonResponse = curl -s $JsonUrl 2>&1
+        $jsonResponse = curl.exe -s $JsonUrl 2>&1
         
         if ($null -eq $jsonResponse -or [string]::IsNullOrWhiteSpace($jsonResponse)) {
             throw "Empty response from URL. Check your internet connection."
