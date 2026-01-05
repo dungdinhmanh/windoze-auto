@@ -55,13 +55,13 @@ $Sha256Path = Join-Path $TempDir "$FontName.sha256"
 Write-Host "Downloading $FontName.zip..."
 try {
     # Download zip file
-    curl.exe -L -q -o $ZipPath $ZipAsset.browser_download_url 2>&1
+    curl.exe -L -o $ZipPath $ZipAsset.browser_download_url 2>&1
     if ($LASTEXITCODE -ne 0) {
         throw "Failed to download zip file"
     }
     
     # Download sha256 file
-    curl.exe -L -q -o $Sha256Path $Sha256Asset.browser_download_url 2>&1
+    curl.exe -L -o $Sha256Path $Sha256Asset.browser_download_url 2>&1
     if ($LASTEXITCODE -ne 0) {
         throw "Failed to download sha256 file"
     }
