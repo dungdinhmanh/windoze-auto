@@ -24,7 +24,7 @@ $ApiUrl = "https://api.github.com/repos/subframe7536/maple-font/releases/latest"
 
 try {
     # Use curl to fetch JSON from GitHub API
-    $JsonResponse = curl.exe -s $ApiUrl 2>&1
+    $JsonResponse = curl.exe -s -q $ApiUrl 2>&1
     if ($LASTEXITCODE -ne 0) {
         throw "curl.exe failed with exit code $LASTEXITCODE"
     }
@@ -55,13 +55,13 @@ $Sha256Path = Join-Path $TempDir "$FontName.sha256"
 Write-Host "Downloading $FontName.zip..."
 try {
     # Download zip file
-    curl.exe -L -o $ZipPath $ZipAsset.browser_download_url 2>&1
+    curl.exe -L -q -o $ZipPath $ZipAsset.browser_download_url 2>&1
     if ($LASTEXITCODE -ne 0) {
         throw "Failed to download zip file"
     }
     
     # Download sha256 file
-    curl.exe -L -o $Sha256Path $Sha256Asset.browser_download_url 2>&1
+    curl.exe -L -q -o $Sha256Path $Sha256Asset.browser_download_url 2>&1
     if ($LASTEXITCODE -ne 0) {
         throw "Failed to download sha256 file"
     }

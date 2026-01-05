@@ -1,0 +1,20 @@
+<Configuration>
+  <Add OfficeClientEdition="64" Channel="BetaChannel">
+    <Product ID="O365ProPlusRetail">
+      <Language ID="vi-vn" />
+      <ExcludeApp ID="Access" />
+      <ExcludeApp ID="Groove" />
+      <ExcludeApp ID="Lync" />
+      <ExcludeApp ID="M365Companion" />
+      <ExcludeApp ID="OneDrive" />
+      <ExcludeApp ID="OneNote" />
+      <ExcludeApp ID="Outlook" />
+      <ExcludeApp ID="OutlookForWindows" />
+      <ExcludeApp ID="Publisher" />
+      <ExcludeApp ID="Teams" />
+    </Product>
+  </Add>
+  <Display AcceptEULA="True" />
+  <Property Name="DeviceBasedLicensing" Value="1" />
+  <Extend CreateShortcuts="true" />
+</Configuration>

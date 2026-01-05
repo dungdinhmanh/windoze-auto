@@ -209,8 +209,20 @@ function Invoke-Setup {
         }
         Write-Host ""
         
-        # Step 6: Install PowerShell modules
-        Write-Host "Step 6: Installing PowerShell modules..." -ForegroundColor Yellow
+        # Step 6: Install Office
+        Write-Host "Step 6: Installing Microsoft Office..." -ForegroundColor Yellow
+        $officeScript = Join-Path $clonePath "install_script\install-office.ps1"
+        
+        if (Test-Path $officeScript) {
+            & powershell -ExecutionPolicy Bypass -File $officeScript
+            Write-Host "Office installed successfully" -ForegroundColor Green
+        } else {
+            Write-Host "install-office.ps1 not found, skipping..." -ForegroundColor Yellow
+        }
+        Write-Host ""
+        
+        # Step 7: Install PowerShell modules
+        Write-Host "Step 7: Installing PowerShell modules..." -ForegroundColor Yellow
         try {
             Install-Module -Name Terminal-Icons -Repository PSGallery -Force -Confirm:$false -ErrorAction Stop
             Write-Host "Terminal-Icons installed successfully" -ForegroundColor Green
@@ -220,7 +232,7 @@ function Invoke-Setup {
         Write-Host ""
         
         # Cleanup
-        Write-Host "Step 7: Cleaning up..." -ForegroundColor Yellow
+        Write-Host "Step 8: Cleaning up..." -ForegroundColor Yellow
         if (Test-Path $clonePath) {
             Remove-Item -Path $clonePath -Recurse -Force -ErrorAction SilentlyContinue
             Write-Host "Repository cleaned up" -ForegroundColor Green
