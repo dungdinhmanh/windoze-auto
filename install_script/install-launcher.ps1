@@ -23,12 +23,18 @@ function Get-RedirectUrl {
             throw "Empty response from URL. Check your internet connection."
         }
         
-        # Convert response to string if needed
-        $responseString = $response -join " "
-        
         Write-Host "Response received, parsing..." -ForegroundColor Yellow
         
-        # Parse the href from the HTML response
+        # Convert response to string safely
+        $responseString = if ($response -is [array]) {
+            $response -join " "
+        } else {
+            [string]$response
+        }
+        
+        if ([string]::IsNullOrWhiteSpace($responseString)) {
+            throw "Empty or invalid response from URL"
+        }
         # Pattern: <a href="actual_download_url?trace_key=xyz">Found</a>
         if ($responseString -match 'href="([^"]+)"') {
             $actualUrl = $matches[1]
@@ -96,9 +102,9 @@ function Install-GameLauncher {
         Write-Host "==================================================" -ForegroundColor Cyan
         Write-Host ""
         
-        # Check if curl is available
-        if (-not (Get-Command curl -ErrorAction SilentlyContinue)) {
-            throw "curl is not installed or not in PATH"
+        # Check if curl.exe is available
+        if (-not (Test-Path "C:\Windows\System32\curl.exe")) {
+            throw "curl.exe is not installed or not found at C:\Windows\System32\curl.exe"
         }
         
         # Get the actual download URL
@@ -133,8 +139,20 @@ function Install-GameLauncher {
             curl.exe -L -o $finalInstallerPath $downloadUrl
         }
         
+        # Check curl exit code
+        if ($LASTEXITCODE -ne 0) {
+            throw "curl.exe failed with exit code $LASTEXITCODE. Failed to download $Name installer"
+        }
+        
         if (-not (Test-Path $finalInstallerPath)) {
             throw "Failed to download $Name installer"
+        }
+        
+        # Validate installer file size (should be at least 1MB)
+        $fileSize = (Get-Item $finalInstallerPath).Length
+        if ($fileSize -lt 1MB) {
+            Remove-Item -Path $finalInstallerPath -Force -ErrorAction SilentlyContinue
+            throw "Downloaded installer is too small ($([math]::Round($fileSize/1MB, 2))MB). File may be corrupt."
         }
         
         Write-Host "Downloaded $Name installer successfully" -ForegroundColor Green
@@ -163,7 +181,9 @@ function Install-GameLauncher {
         }
         # Also cleanup trace_key named file if it exists
         $tempDirPath = Split-Path $InstallerPath
-        Get-Item "$tempDirPath\*_*.exe" -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
+        if ($tempDirPath -and (Test-Path $tempDirPath)) {
+            Get-Item "$tempDirPath\*_*.exe" -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
+        }
     }
 }
 
