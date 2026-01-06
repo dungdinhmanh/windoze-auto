@@ -1,8 +1,12 @@
-# Office 365 installation script using Office Deployment Tool
+# Office 365 installation script using Office Tool Plus Console + Ohook Activation
 $TempDir = "$env:TEMP\office-install"
-$ODTExe = Join-Path $TempDir "setup.exe"
-$ConfigFile = Join-Path (Split-Path $PSScriptRoot) "config\offices.xml"
-$MicrosoftDownloadUrl = "https://www.microsoft.com/en-us/download/details.aspx?id=49117"
+$OhookActivationUrl = "https://raw.githubusercontent.com/massgravel/Microsoft-Activation-Scripts/refs/heads/master/MAS/Separate-Files-Version/Activators/Ohook_Activation_AIO.cmd"
+
+# Enable TLSv1.2 for compatibility
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls12
+
+# Do not display progress for WebRequest
+$ProgressPreference = 'SilentlyContinue'
 
 # Validate environment
 if ([string]::IsNullOrWhiteSpace($env:TEMP) -or -not (Test-Path $env:TEMP)) {
@@ -10,104 +14,73 @@ if ([string]::IsNullOrWhiteSpace($env:TEMP) -or -not (Test-Path $env:TEMP)) {
     exit 1
 }
 
-if (-not (Test-Path $ConfigFile)) {
-    Write-Error "Configuration file not found: $ConfigFile"
-    exit 1
-}
-
-# Get latest download link from Microsoft
-Write-Host "Fetching latest Office Deployment Tool link..."
-try {
-    $PageContent = curl.exe -s -q $MicrosoftDownloadUrl 2>&1
-    if ($LASTEXITCODE -ne 0) {
-        throw "Failed to fetch Microsoft download page"
-    }
-    
-    # Extract download link using regex (looking for officedeploymenttool_*.exe)
-    if ($PageContent -match 'href="([^"]*officedeploymenttool[^"]*\.exe)"') {
-        $DownloadUrl = $matches[1]
-        # Handle relative URLs
-        if ($DownloadUrl -notmatch '^https?://') {
-            $DownloadUrl = "https:" + $DownloadUrl
-        }
-        Write-Host "Found download link: $DownloadUrl" -ForegroundColor Green
-    } else {
-        throw "Could not find download link on Microsoft page"
-    }
-} catch {
-    Write-Error "Failed to get latest download link: $_"
-    Write-Host "Using fallback URL..." -ForegroundColor Yellow
-    $DownloadUrl = "https://download.microsoft.com/download/6c1eeb25-cf8b-41d9-8d0d-cc1dbc032140/officedeploymenttool_19426-20170.exe"
-}
-
 # Create temp directory
-if (!(Test-Path $TempDir)) {
-    New-Item -ItemType Directory -Path $TempDir | Out-Null
+if (-not (Test-Path $TempDir)) {
+    New-Item -ItemType Directory -Path $TempDir -Force | Out-Null
 }
 
-# Download Office Deployment Tool
-Write-Host "Downloading Office Deployment Tool..."
-try {
-    curl.exe -L -q -o $ODTExe $DownloadUrl 2>&1
-    if ($LASTEXITCODE -ne 0) {
-        throw "Failed to download ODT"
+# Always download Office Tool Plus with runtime version
+$OfficeToolPlusDownloadUrl = "https://www.officetool.plus/redirect/download.php?type=runtime&arch=x64"
+
+# Download Office Tool Plus
+Write-Host "Downloading Office Tool Plus (with runtime)..."
+$OfficeToolPlusZip = Join-Path $TempDir "OfficeToolPlus.zip"
+$DownloadSuccess = $false
+
+do {
+    try {
+        Invoke-WebRequest -Uri $OfficeToolPlusDownloadUrl -UseBasicParsing -OutFile $OfficeToolPlusZip -ErrorAction Stop
+        $DownloadSuccess = $true
+    } catch {
+        Write-Warning "An error occurred while downloading Office Tool Plus: $_"
+        $UserChoice = Read-Host "Do you want to retry? (Y/N)"
+        if ($UserChoice -ne "Y" -and $UserChoice -ne "y") {
+            Write-Host "Please download Office Tool Plus from https://www.officetool.plus/ or try again."
+            Remove-Item -Path $TempDir -Recurse -Force -ErrorAction SilentlyContinue
+            exit 1
+        }
     }
-} catch {
-    Write-Error "Failed to download Office Deployment Tool: $_"
-    Remove-Item -Path $TempDir -Recurse -Force -ErrorAction SilentlyContinue
-    exit 1
-}
+} while (-not $DownloadSuccess)
 
-# Verify ODT was downloaded
-if (-not (Test-Path $ODTExe)) {
-    Write-Error "ODT download failed: File not found"
+# Verify Office Tool Plus was downloaded
+if (-not (Test-Path $OfficeToolPlusZip)) {
+    Write-Error "Office Tool Plus download failed: File not found"
     Remove-Item -Path $TempDir -Recurse -Force -ErrorAction SilentlyContinue
     exit 1
 }
 
 # Verify file size
-$FileSize = (Get-Item $ODTExe).Length
-if ($FileSize -lt 500KB) {
-    Write-Error "ODT file appears corrupted (too small: $FileSize bytes)"
+$FileSize = (Get-Item $OfficeToolPlusZip).Length
+if ($FileSize -lt 5MB) {
+    Write-Error "Office Tool Plus file appears corrupted (too small: $FileSize bytes)"
     Remove-Item -Path $TempDir -Recurse -Force -ErrorAction SilentlyContinue
     exit 1
 }
 
-# Extract ODT
-Write-Host "Extracting Office Deployment Tool..."
+# Extract Office Tool Plus
+Write-Host "Extracting Office Tool Plus..."
 try {
-    & $ODTExe /extract:$TempDir /quiet
-    if ($LASTEXITCODE -ne 0) {
-        throw "ODT extraction failed with exit code $LASTEXITCODE"
-    }
+    Expand-Archive -LiteralPath $OfficeToolPlusZip -DestinationPath $TempDir -Force -ErrorAction Stop
 } catch {
-    Write-Error "Failed to extract ODT: $_"
+    Write-Error "Failed to extract Office Tool Plus: $_"
     Remove-Item -Path $TempDir -Recurse -Force -ErrorAction SilentlyContinue
     exit 1
 }
 
-# Verify setup.exe exists after extraction
-$SetupExe = Join-Path $TempDir "setup.exe"
-if (-not (Test-Path $SetupExe)) {
-    Write-Error "setup.exe not found after extraction"
+# Find the extracted Office Tool Plus Console executable
+$OfficeToolPlusConsole = Join-Path $TempDir "Office Tool\Office Tool Plus.Console.exe"
+if (-not (Test-Path $OfficeToolPlusConsole)) {
+    Write-Error "Office Tool Plus Console not found after extraction"
     Remove-Item -Path $TempDir -Recurse -Force -ErrorAction SilentlyContinue
     exit 1
 }
 
-# Copy config file to temp directory
-try {
-    Copy-Item -Path $ConfigFile -Destination (Join-Path $TempDir "offices.xml") -Force -ErrorAction Stop
-} catch {
-    Write-Error "Failed to copy configuration file: $_"
-    Remove-Item -Path $TempDir -Recurse -Force -ErrorAction SilentlyContinue
-    exit 1
-}
-
-# Run Office installation
-Write-Host "Installing Microsoft Office 365..."
+# Run Office installation using direct command line
+Write-Host "Installing Microsoft Office 365 using Office Tool Plus Console..."
 try {
     Push-Location $TempDir
-    & $SetupExe /configure offices.xml
+    # Use the exact command line format as provided
+    & $OfficeToolPlusConsole deploy /O365ProPlusRetail.exclapps Access,Groove,Lync,M365Companion,OneDrive,OneNote,Outlook,OutlookForWindows,Publisher,Teams /add O365ProPlusRetail_vi-vn /channel BetaChannel /edition 64 /shortcuts /acpteula True /setprops "DeviceBasedLicensing:1"
     if ($LASTEXITCODE -ne 0) {
         throw "Office installation failed with exit code $LASTEXITCODE"
     }
@@ -120,6 +93,28 @@ try {
     exit 1
 }
 
+# Download and run Ohook activation
+Write-Host "Downloading Ohook activation..."
+$OhookScriptPath = Join-Path $env:TEMP "Ohook_Activation_AIO.cmd"
+try {
+    Invoke-WebRequest -Uri $OhookActivationUrl -UseBasicParsing -OutFile $OhookScriptPath -ErrorAction Stop
+    Write-Host "Ohook activation downloaded successfully"
+} catch {
+    Write-Warning "Failed to download Ohook activation: $_"
+    Write-Host "Office installed but activation skipped"
+}
+
+# Run Ohook activation if download successful
+if (Test-Path $OhookScriptPath) {
+    Write-Host "Running Ohook activation..."
+    try {
+        & cmd.exe /c $OhookScriptPath
+        Write-Host "Ohook activation completed"
+    } catch {
+        Write-Warning "Failed to run Ohook activation: $_"
+    }
+}
+
 # Cleanup
 try {
     Remove-Item -Path $TempDir -Recurse -Force -ErrorAction Stop
@@ -129,4 +124,4 @@ try {
     Write-Host "Please manually delete: $TempDir"
 }
 
-Write-Host "Office 365 installation complete!"
+Write-Host "Office 365 installation and activation complete!"
