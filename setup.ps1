@@ -165,6 +165,17 @@ function Invoke-Setup {
             }
         }
         
+        # Flameshot config
+        $flameshotConfig = Join-Path $clonePath "config\flameshot"
+        if (Test-Path $flameshotConfig) {
+            $flameshotDir = "$env:APPDATA\flameshot"
+            if (Test-Path $flameshotDir) {
+                Remove-Item -Path $flameshotDir -Recurse -Force
+            }
+            Copy-Item -Path $flameshotConfig -Destination $flameshotDir -Recurse -Force
+            Write-Host "Copied Flameshot config to $env:APPDATA" -ForegroundColor Green
+        }
+        
         # Neovim config
         $nvimRepoUrl = 'https://github.com/dungdinhmanh/nvim.git'
         $nvimConfigDir = "$env:LOCALAPPDATA\nvim"
