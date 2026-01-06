@@ -102,14 +102,14 @@ Write-Host ""
 Write-Host "Downloading $FontName.zip..." -ForegroundColor Yellow
 try {
     # Download zip file (without -s flag to show progress)
-    curl.exe -L -o $ZipPath $ZipAsset.browser_download_url 2>&1
+    curl.exe -L -o $ZipPath $ZipAsset.browser_download_url 
     if ($LASTEXITCODE -ne 0) {
         throw "curl.exe failed with exit code $LASTEXITCODE. Failed to download zip file"
     }
     
     # Download sha256 file (without -s flag to show progress)
     Write-Host "Downloading $FontName.sha256..." -ForegroundColor Yellow
-    curl.exe -L -o $Sha256Path $Sha256Asset.browser_download_url 2>&1
+    curl.exe -L -o $Sha256Path $Sha256Asset.browser_download_url
     if ($LASTEXITCODE -ne 0) {
         throw "curl.exe failed with exit code $LASTEXITCODE. Failed to download sha256 file"
     }
