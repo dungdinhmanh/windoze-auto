@@ -225,7 +225,7 @@ function Invoke-Setup {
         Write-Host "Step 7: Installing PowerShell modules..." -ForegroundColor Yellow
         try {
             # Install NuGet provider first with auto-accept
-            Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -AcceptLicense -ErrorAction Stop
+            Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -ErrorAction Stop
             Write-Host "NuGet provider installed successfully" -ForegroundColor Green
             
             # Install Terminal-Icons with auto-accept
