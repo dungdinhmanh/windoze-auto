@@ -224,10 +224,15 @@ function Invoke-Setup {
         # Step 7: Install PowerShell modules
         Write-Host "Step 7: Installing PowerShell modules..." -ForegroundColor Yellow
         try {
+            # Install NuGet provider first with auto-accept
+            Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -AcceptLicense -ErrorAction Stop
+            Write-Host "NuGet provider installed successfully" -ForegroundColor Green
+            
+            # Install Terminal-Icons with auto-accept
             Install-Module -Name Terminal-Icons -Repository PSGallery -Force -Confirm:$false -ErrorAction Stop
             Write-Host "Terminal-Icons installed successfully" -ForegroundColor Green
         } catch {
-            Write-Host "Failed to install Terminal-Icons: $_" -ForegroundColor Yellow
+            Write-Host "Failed to install PowerShell modules: $_" -ForegroundColor Yellow
         }
         Write-Host ""
         
