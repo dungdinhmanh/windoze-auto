@@ -57,6 +57,9 @@
           "PackageIdentifier": "LastFM.LastFMDesktopScrobbler"
         },
         {
+          "PackageIdentifier": "DiskInternals.LinuxReader"
+        },
+        {
           "PackageIdentifier": "Bitwarden.Bitwarden"
         },
         {
@@ -67,6 +70,9 @@
         },
         {
           "PackageIdentifier": "WinMerge.WinMerge"
+        },
+        {
+          "PackageIdentifier": "sxyazi.yazi"
         },
         {
           "PackageIdentifier": "aristocratos.btop4win"
