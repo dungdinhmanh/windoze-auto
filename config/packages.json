@@ -115,6 +115,9 @@
           "PackageIdentifier": "LocalSend.LocalSend"
         },
         {
+          "PackageIdentifier": "schollz.croc"
+        },
+        {
           "PackageIdentifier": "AlexanderKojevnikov.Spek"
         },
         {
