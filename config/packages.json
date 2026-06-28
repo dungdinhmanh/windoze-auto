@@ -5,6 +5,9 @@
     {
       "Packages": [
         {
+          "PackageIdentifier": "uutils.coreutils"
+        },
+        {
           "PackageIdentifier": "7zip.7zip"
         },
         {
