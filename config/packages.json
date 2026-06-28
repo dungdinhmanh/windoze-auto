@@ -75,6 +75,9 @@
           "PackageIdentifier": "sxyazi.yazi"
         },
         {
+          "PackageIdentifier": "Microsoft.Coreutils"
+        },
+        {
           "PackageIdentifier": "aristocratos.btop4win"
         },
         {
